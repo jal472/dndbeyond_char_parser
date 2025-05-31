@@ -57,7 +57,7 @@ public class Character {
      */
     @Override
     public String toString() {
-        return name + " [level: " + level + " | race: " + race + " | class: " + characterClass + "]";
+        return "\tname: " + name + "\n\tlevel: " + level + "\n\trace: " + race + "\n\tclass: " + characterClass;
     }
 
 }
