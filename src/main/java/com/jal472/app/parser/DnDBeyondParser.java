@@ -5,6 +5,8 @@ import com.jal472.app.network.DnDHttpClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Iterator;
+
 //import java.io.FileWriter;
 //import java.io.IOException;
 
@@ -55,18 +57,18 @@ public class DnDBeyondParser {
         JsonNode root = mapper.readTree(json);
 
         JsonNode data = root.path("data");
-        // Base Info - Fix: subclass, background, walkingSpeed
+        // Base Info
         String name = data.path("name").asText("Unknown");
         int level = data.path("classes").get(0).path("level").asInt(0);
         String species = data.path("race").path("fullName").asText("Unknown");
         String race = data.path("options").path("race").get(0).path("definition").path("name").asText("Unknown");
         String charClass = data.path("classes").get(0).path("definition").path("name").asText("Unknown");
         String charSubclass = data.path("classes").get(0).path("subclassDefinition").path("name").asText("Unknown"); // subclassDefinition.name
-        String background = data.path("background").path("name").asText("Unknown"); // background.name
+        String background = data.path("background").path("definition").path("name").asText("Unknown"); // background.name
         int baseHp = data.path("baseHitPoints").asInt(0); // baseHitPoints
         int bonusHp = data.path("bonusHitPoints").asInt(0); // bonusHitPoints
         int xp = data.path("currentXp").asInt(0);; // currentXp
-        int walkingSpeed = data.path("weightSpeeds").path("normal").path("walk").asInt(0);; // weightSpeeds.normal.walk
+        int walkingSpeed = data.path("race").path("weightSpeeds").path("normal").path("walk").asInt(0);; // weightSpeeds.normal.walk
         boolean heroicInspiration = data.path("inspriation").asBoolean(false); // inspiration
         int gp = data.path("currencies").path("gp").asInt(0); // currencies.gp
 
