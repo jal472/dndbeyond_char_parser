@@ -2,6 +2,7 @@ package com.jal472.app.parser;
 
 import com.jal472.app.model.Character;
 import com.jal472.app.network.DnDHttpClient;
+import com.jal472.app.util.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,6 +39,20 @@ public class DnDBeyondParser {
         }
     }
     /**
+     * Parses the character's information from the character id and creates a Character object
+     * @param id the dndbeyond character id
+     * @return a constructed Character object
+     */
+    public Character parseFromId(int id) {
+        try {
+            String json = httpClient.get(BASE_API + id);
+            return parseCharacterJson(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
      * Extracts the character id from the dnd beyond url
      * @param url dndbeyond character url
      * @return the character id
@@ -58,19 +73,19 @@ public class DnDBeyondParser {
 
         JsonNode data = root.path("data");
         // Base Info
-        String name = data.path("name").asText("Unknown");
-        int level = data.path("classes").get(0).path("level").asInt(0);
-        String species = data.path("race").path("fullName").asText("Unknown");
-        String race = data.path("options").path("race").get(0).path("definition").path("name").asText("Unknown");
-        String charClass = data.path("classes").get(0).path("definition").path("name").asText("Unknown");
-        String charSubclass = data.path("classes").get(0).path("subclassDefinition").path("name").asText("Unknown"); // subclassDefinition.name
-        String background = data.path("background").path("definition").path("name").asText("Unknown"); // background.name
-        int baseHp = data.path("baseHitPoints").asInt(0); // baseHitPoints
-        int bonusHp = data.path("bonusHitPoints").asInt(0); // bonusHitPoints
-        int xp = data.path("currentXp").asInt(0);; // currentXp
-        int walkingSpeed = data.path("race").path("weightSpeeds").path("normal").path("walk").asInt(0);; // weightSpeeds.normal.walk
-        boolean heroicInspiration = data.path("inspriation").asBoolean(false); // inspiration
-        int gp = data.path("currencies").path("gp").asInt(0); // currencies.gp
+        String name = JsonUtils.getSafeText(data, "Unknown", "name");
+        int level = JsonUtils.getSafeIntFromArray(data.path("classes"), 0, 0, "level");
+        String species = JsonUtils.getSafeText(data, "Unknown", "race", "fullName");
+        String race = JsonUtils.getSafeTextFromArray(data.path("options").path("race"), 0, "Unknown", "definition", "name");
+        String charClass = JsonUtils.getSafeTextFromArray(data.path("classes"), 0, "Unknown", "definition", "name");
+        String charSubclass = JsonUtils.getSafeTextFromArray(data.path("classes"), 0, "Unknown", "subclassDefinition", "name");
+        String background = JsonUtils.getSafeText(data, "Unknown", "background", "definition", "name");
+        int baseHp = JsonUtils.getSafeInt(data, 0, "baseHitPoints");
+        int bonusHp = JsonUtils.getSafeInt(data, 0, "bonusHitPoints");
+        int xp = JsonUtils.getSafeInt(data, 0, "currentXp");
+        int walkingSpeed = JsonUtils.getSafeInt(data, 0, "race", "weightSpeeds", "normal", "walk");
+        boolean heroicInspiration = JsonUtils.getSafeBoolean(data, false, "inspiration");
+        int gp = JsonUtils.getSafeInt(data, 0, "currencies", "gp");
 
         Character.CharacterBaseInfo baseInfo = new Character.CharacterBaseInfo(name, level, species, race, charClass,
                 charSubclass, background, baseHp, bonusHp, xp, walkingSpeed, heroicInspiration, gp);
