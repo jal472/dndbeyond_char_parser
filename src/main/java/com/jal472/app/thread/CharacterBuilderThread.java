@@ -1,31 +1,22 @@
 package com.jal472.app.thread;
 
 import com.jal472.app.model.Character;
-import com.jal472.app.network.DnDHttpClient;
 import com.jal472.app.parser.DnDBeyondParser;
 
 public class CharacterBuilderThread extends Thread {
-    private String dndbeyondUrl = "";
     private int characterId = 0;
     private Character character;
-    private DnDHttpClient httpClient = new DnDHttpClient();
-    private DnDBeyondParser characterParser;
+    private final DnDBeyondParser characterParser = new DnDBeyondParser();
 
     public CharacterBuilderThread(String dndbeyondUrl) {
-        this.dndbeyondUrl = dndbeyondUrl;
-        characterParser = new DnDBeyondParser(httpClient);
+        characterId = extractCharacterId(dndbeyondUrl);
     }
     public CharacterBuilderThread(int characterId) {
         this.characterId = characterId;
-        characterParser = new DnDBeyondParser(httpClient);
     }
 
     @Override
     public void run() {
-        if (dndbeyondUrl.isEmpty() && characterId == 0) {
-            characterId = extractCharacterId(dndbeyondUrl);
-        }
-
         try {
             System.out.println("Thread " + Thread.currentThread().getId() + " is building character " + characterId);
         } catch (Exception e) {

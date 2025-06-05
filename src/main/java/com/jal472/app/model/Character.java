@@ -9,12 +9,6 @@ public class Character {
 //    private CharacterSkills;
     // strengthSavingThrowModifiers[] - list of potential strength saving throw modifiers
 //    private CharacterSavingThrowMods;
-    // customSenses[] - senses[] - list of potential senses
-//    private CharacterSenses;
-    // customProficiencies[] - armor[], weapons[], tools[], languages[]
-//    private CharacterProficiencies;
-    // inventory (n.definition.name)
-//    private CharacterInventory;
     /**
      * Character class constructor
      * @param baseInfo character's baseInfo - see CharacterBaseInfo nested class

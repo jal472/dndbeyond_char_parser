@@ -6,38 +6,11 @@ import com.jal472.app.util.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.Iterator;
-
-//import java.io.FileWriter;
-//import java.io.IOException;
-
 // No need for a constructor because this parser will just be used as a utility class for retrieving character data
 public class DnDBeyondParser {
-    private final DnDHttpClient httpClient;
+    private final DnDHttpClient httpClient = new DnDHttpClient();;
     private static final String BASE_API = "https://character-service.dndbeyond.com/character/v5/character/";
 
-    /**
-     * DnDBeyondParser constructor to initialize the httpClient to access dndbeyond character pages
-     * @param httpClient the http client that makes requests to dndbeyond character pages
-     */
-    public DnDBeyondParser(DnDHttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
-    /**
-     * Parses the character's information from a url and creates a Character object
-     * @param url the dndbeyond character url
-     * @return a constructed Character object
-     */
-    public Character parseFromUrl(String url) {
-        try {
-            String characterId = extractCharacterId(url);
-            String json = httpClient.get(BASE_API + characterId);
-            return parseCharacterJson(json);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
     /**
      * Parses the character's information from the character id and creates a Character object
      * @param id the dndbeyond character id
@@ -51,15 +24,6 @@ public class DnDBeyondParser {
             e.printStackTrace();
             return null;
         }
-    }
-    /**
-     * Extracts the character id from the dnd beyond url
-     * @param url dndbeyond character url
-     * @return the character id
-     */
-    private String extractCharacterId(String url) {
-        String[] parts = url.split("/");
-        return parts[parts.length - 1];
     }
     /**
      * Parses the json body of the dndbeyond character page and creates the Character object
@@ -87,8 +51,12 @@ public class DnDBeyondParser {
         boolean heroicInspiration = JsonUtils.getSafeBoolean(data, false, "inspiration");
         int gp = JsonUtils.getSafeInt(data, 0, "currencies", "gp");
 
-        Character.CharacterBaseInfo baseInfo = new Character.CharacterBaseInfo(name, level, species, race, charClass,
-                charSubclass, background, baseHp, bonusHp, xp, walkingSpeed, heroicInspiration, gp);
+        Character.CharacterBaseInfo baseInfo = new Character.CharacterBaseInfo(
+                name, level, species,
+                race, charClass, charSubclass,
+                background, baseHp, bonusHp,
+                xp, walkingSpeed, heroicInspiration,
+                gp);
         return new Character(baseInfo);
     }
 }

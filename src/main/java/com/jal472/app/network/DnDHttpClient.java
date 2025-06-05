@@ -7,11 +7,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class DnDHttpClient {
-    private final HttpClient client;
-
-    public DnDHttpClient() {
-        this.client = HttpClient.newHttpClient();
-    }
+    private final HttpClient client = HttpClient.newHttpClient();;
 
     public String get(String url) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
