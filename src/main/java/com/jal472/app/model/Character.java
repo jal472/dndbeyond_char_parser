@@ -107,7 +107,7 @@ public class Character {
         }
         @Override
         public String toString() {
-            return "\tname: " + name +
+            return name +
                     "\n\tlevel: " + level +
                     "\n\tspecies: " + species +
                     "\n\trace: " + race +

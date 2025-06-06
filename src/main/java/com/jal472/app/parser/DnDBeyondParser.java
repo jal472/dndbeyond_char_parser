@@ -18,6 +18,13 @@ public class DnDBeyondParser {
      */
     public Character parseFromId(int id) {
         try {
+            System.out.println("Thread " + Thread.currentThread().getName() + " is parsing character " + id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
             String json = httpClient.get(BASE_API + id);
             return parseCharacterJson(json);
         } catch (Exception e) {
